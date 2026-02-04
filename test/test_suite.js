@@ -15,15 +15,22 @@ function assert(condition, message) {
 function testParser() {
     console.log("\n--- Testing Parser ---");
     const cases = [
-        { in: "102030", expect0: 0x10 },
-        { in: "0x10 0x20", expect0: 0x10 },
-        { in: "[16, 32]", expect0: 0x10 }, // decimal 16 = 0x10
-        { in: "ECAw", expect0: 0x10 }
+        { in: "102030", expect0: 0x10, type: "Hex (Continuous)" },
+        { in: "0x10 0x20", expect0: 0x10, type: "Array (Hex)" },
+        { in: "[16, 32]", expect0: 0x10, type: "Array (Integer)" }, // decimal 16 = 0x10
+        { in: "ECAw", expect0: 0x10, type: "Base64" },
+        { in: "0xZZ", isError: true }, // Invalid Hex
+        { in: "!!!!", isError: true } // Invalid Base64/Hex
     ];
 
     cases.forEach(c => {
-        const res = InspectorCore.parseInput(c.in);
-        assert(res.length > 0 && res[0] === c.expect0, `Input "${c.in}" parsed correctly`);
+        const { bytes, type, error } = InspectorCore.parseInput(c.in);
+        if (c.isError) {
+            assert(error !== null, `Input "${c.in}" correctly reported error: ${error}`);
+        } else {
+            assert(bytes && bytes.length > 0 && bytes[0] === c.expect0, `Input "${c.in}" parsed correctly`);
+            if (c.type) assert(type === c.type, `Input "${c.in}" type detected: ${type}`);
+        }
     });
 }
 

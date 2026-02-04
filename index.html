@@ -30,8 +30,36 @@
         <!-- Input & Controls -->
         <div class="input-section">
             <div class="text-field">
-                <label>Hex Input Stream</label>
-                <textarea x-model="rawInput" placeholder="Paste hex string here... 48656c6c6f..."></textarea>
+                <label>Input Data</label>
+                <textarea x-model="rawInput" placeholder="Paste data here (Hex, Array, Base64)..."></textarea>
+            </div>
+
+            <!-- Feedback Section (Styled as Control Group) -->
+            <div class="controls" style="padding: 0;">
+                <div class="control-group" style="width: 100%; justify-content: flex-start;">
+                    <!-- Default State -->
+                    <template x-if="!inputError && !inputType">
+                        <div style="color: var(--md-sys-color-secondary); font-size: 14px;">
+                            No data
+                        </div>
+                    </template>
+
+                    <!-- Error State -->
+                    <template x-if="inputError">
+                        <div
+                            style="color: var(--md-sys-color-error); font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <span>⚠</span> <span x-text="inputError"></span>
+                        </div>
+                    </template>
+
+                    <!-- Valid State -->
+                    <template x-if="!inputError && inputType">
+                        <div
+                            style="color: var(--md-sys-color-primary); display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <span>✓</span> <span x-text="'Detected: ' + inputType"></span>
+                        </div>
+                    </template>
+                </div>
             </div>
 
             <div class="controls">

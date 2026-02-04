@@ -1,9 +1,10 @@
 // Core Logic (Testable)
 const InspectorCore = {
     parseInput(input) {
-        if (!input) return new Uint8Array([]);
+        const result = { bytes: new Uint8Array([]), type: null, error: null };
+        if (!input) return result;
         const trimmed = input.trim();
-        if (!trimmed) return new Uint8Array([]);
+        if (!trimmed) return result;
 
         // 1. Detect Separators (Space, Comma, Brackets)
         const hasSeparators = /[\s,\[\]]/.test(trimmed);
@@ -12,31 +13,63 @@ const InspectorCore = {
             const cleaned = trimmed.replace(/[\[\]]/g, '');
             const items = cleaned.split(/[\s,]+/).filter(x => x);
             const bytes = [];
+            let isHex = false;
+            let isDecimal = false;
+
             for (const item of items) {
-                if (item.toLowerCase().startsWith('0x')) {
-                    bytes.push(parseInt(item, 16));
+                const isExplicitHex = item.toLowerCase().startsWith('0x');
+                if (isExplicitHex) {
+                    const parsed = parseInt(item, 16);
+                    if (isNaN(parsed)) {
+                        result.error = `Invalid Hex Value: ${item}`;
+                        return result;
+                    }
+                    bytes.push(parsed);
+                    isHex = true;
                 } else {
-                    bytes.push(parseInt(item, 10)); // Decimal
+                    // Try Decimal
+                    const parsed = parseInt(item, 10);
+                    // Check if it looks like hex without 0x but valid decimal?
+                    // User rule: "int Array: 16 32". These are decimal.
+                    if (isNaN(parsed)) {
+                        // Could be bad value
+                        result.error = `Invalid Integer Value: ${item}`;
+                        return result;
+                    }
+                    if (parsed > 255 || parsed < 0) {
+                        result.error = `Value out of byte range (0-255): ${item}`;
+                        // We push it anyway? Or stop?
+                    }
+                    bytes.push(parsed);
+                    isDecimal = true;
                 }
             }
-            return new Uint8Array(bytes);
+            result.bytes = new Uint8Array(bytes);
+            result.type = isHex && isDecimal ? "Array (Mixed)" : (isHex ? "Array (Hex)" : "Array (Integer)");
+            return result;
         }
 
         // 2. Contiguous String
         // Explicit 0x
         if (trimmed.toLowerCase().startsWith('0x')) {
             const hex = trimmed.substring(2);
+            if (!/^[0-9A-Fa-f]+$/.test(hex)) {
+                result.error = "Invalid Hex characters detected";
+                return result;
+            }
             const safeHex = hex.length % 2 !== 0 ? '0' + hex : hex;
-            return new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            result.bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            result.type = "Hex (Explicit)";
+            return result;
         }
 
-        // Ambiguous: Hex (no separators) vs Base64
-        const isHex = /^[0-9A-Fa-f]+$/.test(trimmed);
-        if (isHex) {
+        // Ambiguous: Hex vs Base64
+        const isHexChars = /^[0-9A-Fa-f]+$/.test(trimmed);
+        if (isHexChars) {
             const safeHex = trimmed.length % 2 !== 0 ? '0' + trimmed : trimmed;
-            try {
-                return new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-            } catch (e) { return new Uint8Array([]); }
+            result.bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            result.type = "Hex (Continuous)";
+            return result;
         }
 
         // Try Base64
@@ -46,9 +79,12 @@ const InspectorCore = {
             for (let i = 0; i < binString.length; i++) {
                 bytes[i] = binString.charCodeAt(i);
             }
-            return bytes;
+            result.bytes = bytes;
+            result.type = "Base64";
+            return result;
         } catch (e) {
-            return new Uint8Array([]);
+            result.error = "Unknown Format / Invalid Base64";
+            return result;
         }
     },
 
@@ -178,6 +214,8 @@ function frameInspector() {
         rawInput: '48656c6c6f00000040490fdb',
         byteLength: 0,
         offset: 0,
+        inputType: null,
+        inputError: null,
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -202,15 +240,22 @@ function frameInspector() {
         },
 
         parse() {
-            const bytes = InspectorCore.parseInput(this.rawInput);
-            if (!bytes || bytes.length === 0) return;
+            const { bytes, type, error } = InspectorCore.parseInput(this.rawInput);
+            this.inputType = type;
+            this.inputError = error;
+
+            if (error || !bytes || bytes.length === 0) {
+                // Could clear streams here but keeping previous valid state might be preferred or just empty.
+                // If error, let's stop processing.
+                return;
+            }
             this.byteLength = bytes.length;
             this.decodedStreams = InspectorCore.generateAllLists(bytes);
         },
 
         scan() {
-            const bytes = InspectorCore.parseInput(this.rawInput);
-            if (!bytes || bytes.length < 4) return;
+            const { bytes, error } = InspectorCore.parseInput(this.rawInput);
+            if (error || !bytes || bytes.length < 4) return;
 
             let bestOffset = -1;
             for (let i = 0; i < bytes.length - 4; i++) {
