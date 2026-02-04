@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Inspector</title>
+    <!-- Roboto Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Local Logic -->
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body x-data="frameInspector()">
+    <header>
+        <h1>Frame Inspector</h1>
+        <button class="btn-primary" @click="scan()">Auto Scan</button>
+    </header>
+
+    <div class="container">
+        <!-- Input & Controls -->
+        <div class="input-section">
+            <div class="text-field">
+                <label>Hex Input Stream</label>
+                <textarea x-model="rawInput" placeholder="Paste hex string here... 48656c6c6f..."></textarea>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label style="margin:0">Offset (bytes)</label>
+                    <input type="number" x-model.number="offset" min="0" :max="maxOffset">
+                </div>
+
+
+
+                <div class="control-group">
+                    <label style="margin:0">Preview:</label>
+                    <code x-text="results.hex"
+                        style="font-family:'Roboto Mono'; color: var(--md-sys-color-primary);"></code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="result-section">
+            <h2 class="section-title">Inspector</h2>
+            <div class="table-container">
+                <table class="inspector-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Big Endian (ABCD)</th>
+                            <th>Little Endian (DCBA)</th>
+                            <th>Mid-Big (BADC)</th>
+                            <th>Mid-Little (CDAB)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="type-label">Float 32</td>
+                            <td x-text="inspector.float32.be"></td>
+                            <td x-text="inspector.float32.le"></td>
+                            <td x-text="inspector.float32.mb"></td>
+                            <td x-text="inspector.float32.ml"></td>
+                        </tr>
+                        <tr>
+                            <td class="type-label">Float 64</td>
+                            <td x-text="inspector.float64.be"></td>
+                            <td x-text="inspector.float64.le"></td>
+                            <td x-text="inspector.float64.mb"></td>
+                            <td x-text="inspector.float64.ml"></td>
+                        </tr>
+                        <tr>
+                            <td class="type-label">UINT 32</td>
+                            <td x-text="inspector.uint32.be"></td>
+                            <td x-text="inspector.uint32.le"></td>
+                            <td x-text="inspector.uint32.mb"></td>
+                            <td x-text="inspector.uint32.ml"></td>
+                        </tr>
+                        <tr>
+                            <td class="type-label">INT 32</td>
+                            <td x-text="inspector.int32.be"></td>
+                            <td x-text="inspector.int32.le"></td>
+                            <td x-text="inspector.int32.mb"></td>
+                            <td x-text="inspector.int32.ml"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="inspector-table" style="margin-top: 16px;">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Big Endian (AB)</th>
+                            <th>Little Endian (BA)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="type-label">UINT 16</td>
+                            <td x-text="inspector.uint16.be"></td>
+                            <td x-text="inspector.uint16.le"></td>
+                        </tr>
+                        <tr>
+                            <td class="type-label">INT 16</td>
+                            <td x-text="inspector.int16.be"></td>
+                            <td x-text="inspector.int16.le"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="single-row-stats">
+                    <div class="stat-block">
+                        <span class="label">UINT 8</span>
+                        <span class="value" x-text="inspector.uint8"></span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="label">INT 8</span>
+                        <span class="value" x-text="inspector.int8"></span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="label">Text (16b)</span>
+                        <span class="value" x-text="inspector.text"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Stream Composition (Lists)</h2>
+            <div class="stream-lists">
+                <div class="list-group">
+                    <h3>INT 64</h3>
+                    <div class="chip-container">
+                        <template x-for="item in streamLists.int64">
+                            <div class="chip">
+                                <span class="chip-hex" x-text="item.hex"></span>
+                                <span class="chip-val" x-text="item.val"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <h3>INT 32</h3>
+                    <div class="chip-container">
+                        <template x-for="item in streamLists.int32">
+                            <div class="chip">
+                                <span class="chip-hex" x-text="item.hex"></span>
+                                <span class="chip-val" x-text="item.val"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <h3>INT 16</h3>
+                    <div class="chip-container">
+                        <template x-for="item in streamLists.int16">
+                            <div class="chip">
+                                <span class="chip-hex" x-text="item.hex"></span>
+                                <span class="chip-val" x-text="item.val"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <h3>INT 8</h3>
+                    <div class="chip-container">
+                        <template x-for="item in streamLists.int8">
+                            <div class="chip">
+                                <span class="chip-hex" x-text="item.hex"></span>
+                                <span class="chip-val" x-text="item.val"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
