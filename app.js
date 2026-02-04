@@ -8,6 +8,8 @@ function frameInspector() {
             // Lists of objects { val: string/number, hex: string }
             float32: { be: [], le: [], mb: [], ml: [] },
             float64: { be: [], le: [], mb: [], ml: [] },
+            uint64: { be: [], le: [], mb: [], ml: [] },
+            int64: { be: [], le: [], mb: [], ml: [] },
             uint32: { be: [], le: [], mb: [], ml: [] },
             int32: { be: [], le: [], mb: [], ml: [] },
             uint16: { be: [], le: [] },
@@ -44,11 +46,6 @@ function frameInspector() {
             // Helper to process chunks
             const process = (chunkSize, callback) => {
                 const results = {};
-
-                // Initialize result arrays based on callback keys
-                // We'll run one dummy pass or just know the keys? 
-                // Let's return an object of arrays from this helper.
-
                 const variants = {};
 
                 for (let i = 0; i < bytes.length; i += chunkSize) {
@@ -97,9 +94,6 @@ function frameInspector() {
                 const rMB = read(mb);
                 const rML = read(ml);
 
-                // Return combined object to split later? 
-                // Or we can run process multiple times. 
-                // Actually efficiently, we want to update the data structure directly.
                 return {
                     u_be: rBE.u, u_le: rLE.u, u_mb: rMB.u, u_ml: rML.u,
                     i_be: rBE.i, i_le: rLE.i, i_mb: rMB.i, i_ml: rML.i,
@@ -112,20 +106,37 @@ function frameInspector() {
             this.decodedStreams.int32 = { be: chunk32.i_be, le: chunk32.i_le, mb: chunk32.i_mb, ml: chunk32.i_ml };
             this.decodedStreams.float32 = { be: chunk32.f_be, le: chunk32.f_le, mb: chunk32.f_mb, ml: chunk32.f_ml };
 
-            // 2. 64-bit Types (Float64)
+            // 2. 64-bit Types (Float64, Uint64, Int64)
             const chunk64 = process(8, (b) => {
                 const be = b;
                 const le = [...b].reverse();
                 const mb = [b[1], b[0], b[3], b[2], b[5], b[4], b[7], b[6]]; // BADC...
                 const ml = [b[2], b[3], b[0], b[1], b[6], b[7], b[4], b[5]]; // CDAB...
 
-                const getF64 = (arr) => getView(arr).getFloat64(0);
+                const read = (arr) => {
+                    const view = getView(arr);
+                    // Use BigInt for 64-bit integers
+                    return {
+                        f: view.getFloat64(0),
+                        u: view.getBigUint64(0),
+                        i: view.getBigInt64(0)
+                    };
+                };
+
+                const rBE = read(be);
+                const rLE = read(le);
+                const rMB = read(mb);
+                const rML = read(ml);
 
                 return {
-                    be: getF64(be), le: getF64(le), mb: getF64(mb), ml: getF64(ml)
+                    f_be: rBE.f, f_le: rLE.f, f_mb: rMB.f, f_ml: rML.f,
+                    u_be: rBE.u, u_le: rLE.u, u_mb: rMB.u, u_ml: rML.u,
+                    i_be: rBE.i, i_le: rLE.i, i_mb: rMB.i, i_ml: rML.i
                 };
             });
-            this.decodedStreams.float64 = chunk64;
+            this.decodedStreams.float64 = { be: chunk64.f_be, le: chunk64.f_le, mb: chunk64.f_mb, ml: chunk64.f_ml };
+            this.decodedStreams.uint64 = { be: chunk64.u_be, le: chunk64.u_le, mb: chunk64.u_mb, ml: chunk64.u_ml };
+            this.decodedStreams.int64 = { be: chunk64.i_be, le: chunk64.i_le, mb: chunk64.i_mb, ml: chunk64.i_ml };
 
             // 3. 16-bit Types
             const chunk16 = process(2, (b) => {

@@ -366,6 +366,10 @@ input:checked+.slider:before {
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 }
 
+.card.wide {
+    grid-column: span 2;
+}
+
 .card-header {
     font: var(--md-sys-typescale-title-medium);
     color: var(--md-sys-color-primary);
@@ -402,6 +406,7 @@ input:checked+.slider:before {
     font-size: 13px;
     white-space: nowrap;
     color: var(--md-sys-color-on-surface);
+    flex: 1;
 }
 
 .chip.highlight {
