@@ -3,31 +3,22 @@ function frameInspector() {
         rawInput: '48656c6c6f00000040490fdb',
         offset: 0,
 
-        // Multi-Endian Table Results
-        inspector: {
-            float32: { be: 'N/A', le: 'N/A', mb: 'N/A', ml: 'N/A' },
-            float64: { be: 'N/A', le: 'N/A', mb: 'N/A', ml: 'N/A' },
-            uint32: { be: 0, le: 0, mb: 0, ml: 0 },
-            int32: { be: 0, le: 0, mb: 0, ml: 0 },
-            uint16: { be: 0, le: 0 },
-            int16: { be: 0, le: 0 },
-            uint8: 0,
-            int8: 0,
-            text: ''
-        },
-
-        // Stream Lists
-        streamLists: {
-            int8: [],
-            int16: [],
-            int32: [],
-            int64: []
+        // Unified Data Structure: { type: { variant: [values] } }
+        decodedStreams: {
+            // Lists of objects { val: string/number, hex: string }
+            float32: { be: [], le: [], mb: [], ml: [] },
+            float64: { be: [], le: [], mb: [], ml: [] },
+            uint32: { be: [], le: [], mb: [], ml: [] },
+            int32: { be: [], le: [], mb: [], ml: [] },
+            uint16: { be: [], le: [] },
+            int16: { be: [], le: [] },
+            uint8: [],
+            int8: []
         },
 
         init() {
             this.parse();
             this.$watch('rawInput', () => this.parse());
-            this.$watch('offset', () => this.updateInspector());
         },
 
         get cleanHex() {
@@ -40,160 +31,128 @@ function frameInspector() {
 
         parse() {
             const hex = this.cleanHex;
-            if (!hex || hex.length % 2 !== 0) return;
+            if (!hex) return;
 
-            const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            // Pad hex to ensures bytes if odd
+            const safeHex = hex.length % 2 !== 0 ? '0' + hex : hex;
+            const bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 
-            this.generateLists(bytes);
-            this.updateInspector(bytes);
+            this.generateAllLists(bytes);
         },
 
-        updateInspector(bytesInput) {
-            const hex = this.cleanHex;
-            // Re-parse bytes if not provided (called from offset watcher)
-            const bytes = bytesInput || (hex ? new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))) : new Uint8Array(0));
+        generateAllLists(bytes) {
+            // Helper to process chunks
+            const process = (chunkSize, callback) => {
+                const results = {};
 
-            // Validate offset
-            if (this.offset < 0) this.offset = 0;
-            if (this.offset >= bytes.length) this.offset = bytes.length > 0 ? bytes.length - 1 : 0;
+                // Initialize result arrays based on callback keys
+                // We'll run one dummy pass or just know the keys? 
+                // Let's return an object of arrays from this helper.
 
-            const off = this.offset;
+                const variants = {};
 
-            // Helpers
-            const getBytes = (n) => {
-                if (off + n > bytes.length) return null;
-                return Array.from(bytes.slice(off, off + n)); // Slice works on TypedArray
-            };
-
-            const reverse = (arr) => [...arr].reverse();
-
-            // 4-byte types
-            const b4 = getBytes(4);
-            if (b4) {
-                const be = b4;
-                const le = reverse(b4);
-                const mb = [b4[1], b4[0], b4[3], b4[2]]; // BADC
-                const ml = [b4[2], b4[3], b4[0], b4[1]]; // CDAB
-
-                const makeRes = (arr) => {
-                    const u32 = new DataView(new Uint8Array(arr).buffer).getUint32(0, false);
-                    const i32 = new DataView(new Uint8Array(arr).buffer).getInt32(0, false);
-                    const f32 = new DataView(new Uint8Array(arr).buffer).getFloat32(0, false);
-                    return { u: u32, i: i32, f: f32 };
-                };
-
-                const rBE = makeRes(be);
-                const rLE = makeRes(le);
-                const rMB = makeRes(mb);
-                const rML = makeRes(ml);
-
-                this.inspector.uint32 = { be: rBE.u, le: rLE.u, mb: rMB.u, ml: rML.u };
-                this.inspector.int32 = { be: rBE.i, le: rLE.i, mb: rMB.i, ml: rML.i };
-                this.inspector.float32 = { be: rBE.f, le: rLE.f, mb: rMB.f, ml: rML.f };
-            } else {
-                this.inspector.uint32 = this.inspector.int32 = this.inspector.float32 = { be: '-', le: '-', mb: '-', ml: '-' };
-            }
-
-            // 8-byte types (Float64)
-            const b8 = getBytes(8);
-            if (b8) {
-                // BE
-                const be = b8;
-                // LE
-                const le = reverse(b8);
-                // Mid-Big (BADC...)
-                const mb = [b8[1], b8[0], b8[3], b8[2], b8[5], b8[4], b8[7], b8[6]];
-                // Mid-Little (CDAB...) - Following user pattern for 32-bit (Swap 16-bit words)
-                const ml = [b8[2], b8[3], b8[0], b8[1], b8[6], b8[7], b8[4], b8[5]];
-
-                const makeF64 = (arr) => new DataView(new Uint8Array(arr).buffer).getFloat64(0, false);
-
-                this.inspector.float64 = {
-                    be: makeF64(be),
-                    le: makeF64(le),
-                    mb: makeF64(mb),
-                    ml: makeF64(ml)
-                };
-            } else {
-                this.inspector.float64 = { be: '-', le: '-', mb: '-', ml: '-' };
-            }
-
-            // 2-byte types
-            const b2 = getBytes(2);
-            if (b2) {
-                const u16be = (b2[0] << 8) | b2[1];
-                const u16le = (b2[1] << 8) | b2[0];
-                const toI16 = (u) => (u << 16) >> 16;
-
-                this.inspector.uint16 = { be: u16be, le: u16le };
-                this.inspector.int16 = { be: toI16(u16be), le: toI16(u16le) };
-            } else {
-                this.inspector.uint16 = this.inspector.int16 = { be: '-', le: '-' };
-            }
-
-            // 1-byte
-            const b1 = getBytes(1);
-            if (b1) {
-                this.inspector.uint8 = b1[0];
-                this.inspector.int8 = (b1[0] << 24) >> 24;
-            } else {
-                this.inspector.uint8 = this.inspector.int8 = '-';
-            }
-
-            // Text
-            if (bytes.length > off) {
-                const slice = bytes.slice(off, off + 16);
-                const decoder = new TextDecoder('utf-8', { fatal: false });
-                this.inspector.text = decoder.decode(slice).replace(/[\u0000-\u001F\u007F-\u009F]/g, '.');
-            } else {
-                this.inspector.text = '';
-            }
-        },
-
-        generateLists(bytes) {
-            // Helper to chunk and pad
-            const chunkAndPad = (chunkSize) => {
-                const chunks = [];
                 for (let i = 0; i < bytes.length; i += chunkSize) {
                     let slice = Array.from(bytes.slice(i, i + chunkSize));
+                    // Pad (Big Endian logic = Prepend zeros)
+                    while (slice.length < chunkSize) slice.unshift(0);
 
-                    // Pad logic: Prepend zeros if partial
-                    while (slice.length < chunkSize) {
-                        slice.unshift(0);
+                    const hexStr = slice.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
+                    const values = callback(slice); // Returns { be: val, le: val ... }
+
+                    // Initialize keys on first run
+                    if (i === 0) {
+                        Object.keys(values).forEach(k => variants[k] = []);
                     }
 
-                    // Convert to Value (Big Endian)
-                    const hex = slice.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-
-                    let val = '-';
-                    if (chunkSize === 1) {
-                        const u = slice[0];
-                        const i8 = (u << 24) >> 24;
-                        val = `${i8}`;
-                    } else if (chunkSize === 2) {
-                        const u = (slice[0] << 8) | slice[1];
-                        const i16 = (u << 16) >> 16;
-                        val = `${i16}`;
-                    } else if (chunkSize === 4) {
-                        const i32 = (slice[0] << 24) | (slice[1] << 16) | (slice[2] << 8) | slice[3];
-                        val = `${i32}`;
-                    } else if (chunkSize === 8) {
-                        // BigInt
-                        let h = slice.map(b => b.toString(16).padStart(2, '0')).join('');
-                        let u = BigInt('0x' + h);
-                        let i64 = BigInt.asIntN(64, u);
-                        val = `${i64}`;
-                    }
-
-                    chunks.push({ hex, val });
+                    Object.entries(values).forEach(([k, v]) => {
+                        variants[k].push({ hex: hexStr, val: v });
+                    });
                 }
-                return chunks;
+                return variants;
             };
 
-            this.streamLists.int8 = chunkAndPad(1);
-            this.streamLists.int16 = chunkAndPad(2);
-            this.streamLists.int32 = chunkAndPad(4);
-            this.streamLists.int64 = chunkAndPad(8);
+            // Bit-twiddling and DataView helpers
+            const toU32 = (b) => ((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0;
+            const getView = (b) => new DataView(new Uint8Array(b).buffer);
+
+            // 1. 32-bit Types (Float32, Uint32, Int32)
+            const chunk32 = process(4, (b) => {
+                // Bytes: b[0], b[1], b[2], b[3]
+                const be = b;
+                const le = [b[3], b[2], b[1], b[0]];
+                const mb = [b[1], b[0], b[3], b[2]]; // BADC
+                const ml = [b[2], b[3], b[0], b[1]]; // CDAB
+
+                const read = (arr) => {
+                    const view = getView(arr);
+                    return {
+                        u: view.getUint32(0),
+                        i: view.getInt32(0),
+                        f: view.getFloat32(0)
+                    };
+                };
+
+                const rBE = read(be);
+                const rLE = read(le);
+                const rMB = read(mb);
+                const rML = read(ml);
+
+                // Return combined object to split later? 
+                // Or we can run process multiple times. 
+                // Actually efficiently, we want to update the data structure directly.
+                return {
+                    u_be: rBE.u, u_le: rLE.u, u_mb: rMB.u, u_ml: rML.u,
+                    i_be: rBE.i, i_le: rLE.i, i_mb: rMB.i, i_ml: rML.i,
+                    f_be: rBE.f, f_le: rLE.f, f_mb: rMB.f, f_ml: rML.f
+                };
+            });
+
+            // Map back to global structure
+            this.decodedStreams.uint32 = { be: chunk32.u_be, le: chunk32.u_le, mb: chunk32.u_mb, ml: chunk32.u_ml };
+            this.decodedStreams.int32 = { be: chunk32.i_be, le: chunk32.i_le, mb: chunk32.i_mb, ml: chunk32.i_ml };
+            this.decodedStreams.float32 = { be: chunk32.f_be, le: chunk32.f_le, mb: chunk32.f_mb, ml: chunk32.f_ml };
+
+            // 2. 64-bit Types (Float64)
+            const chunk64 = process(8, (b) => {
+                const be = b;
+                const le = [...b].reverse();
+                const mb = [b[1], b[0], b[3], b[2], b[5], b[4], b[7], b[6]]; // BADC...
+                const ml = [b[2], b[3], b[0], b[1], b[6], b[7], b[4], b[5]]; // CDAB...
+
+                const getF64 = (arr) => getView(arr).getFloat64(0);
+
+                return {
+                    be: getF64(be), le: getF64(le), mb: getF64(mb), ml: getF64(ml)
+                };
+            });
+            this.decodedStreams.float64 = chunk64;
+
+            // 3. 16-bit Types
+            const chunk16 = process(2, (b) => {
+                const be = b;
+                const le = [b[1], b[0]];
+                const read = (arr) => {
+                    const v = getView(arr);
+                    return { u: v.getUint16(0), i: v.getInt16(0) };
+                };
+                const rBE = read(be);
+                const rLE = read(le);
+                return {
+                    u_be: rBE.u, u_le: rLE.u,
+                    i_be: rBE.i, i_le: rLE.i
+                };
+            });
+            this.decodedStreams.uint16 = { be: chunk16.u_be, le: chunk16.u_le };
+            this.decodedStreams.int16 = { be: chunk16.i_be, le: chunk16.i_le };
+
+            // 4. 8-bit Types
+            const chunk8 = process(1, (b) => {
+                const u = b[0];
+                const i = (u << 24) >> 24;
+                return { u, i };
+            });
+            this.decodedStreams.uint8 = chunk8.u;
+            this.decodedStreams.int8 = chunk8.i;
         },
 
         scan() {

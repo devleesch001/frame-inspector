@@ -337,6 +337,7 @@ input:checked+.slider:before {
     border: none;
     padding: 10px 24px;
     border-radius: var(--md-sys-shape-corner-full);
+
     font: var(--md-sys-typescale-label-large);
     cursor: pointer;
     transition: box-shadow 0.2s;
@@ -344,4 +345,77 @@ input:checked+.slider:before {
 
 .btn-primary:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Cards Grid Layout (Unified View) */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    padding-bottom: 24px;
+}
+
+.card {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+    /* Fixed height for scrolling lists */
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font: var(--md-sys-typescale-title-medium);
+    color: var(--md-sys-color-primary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.card-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+
+/* Chip Row (2 Items) */
+.chip-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.chip {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    padding: 4px 10px;
+    border-radius: 6px;
+    /* Slightly rounded, not pill */
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    white-space: nowrap;
+    color: var(--md-sys-color-on-surface);
+}
+
+.chip.highlight {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-color: var(--md-sys-color-secondary-container);
+}
+
+/* Scrollbar for Cards */
+.card-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-list::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 3px;
 }
