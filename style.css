@@ -348,11 +348,22 @@ input:checked+.slider:before {
 }
 
 /* Cards Grid Layout (Unified View) */
+.type-section {
+    margin-bottom: 32px;
+}
+
+.type-section h3 {
+    font: var(--md-sys-typescale-title-medium);
+    color: var(--md-sys-color-secondary);
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    padding-bottom: 8px;
+}
+
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 16px;
-    padding-bottom: 24px;
 }
 
 .card {
@@ -366,9 +377,7 @@ input:checked+.slider:before {
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card.wide {
-    grid-column: span 2;
-}
+
 
 .card-header {
     font: var(--md-sys-typescale-title-medium);

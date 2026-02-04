@@ -53,338 +53,398 @@
         <!-- Dashboard -->
         <div class="result-section">
             <h2 class="section-title">Expanded Stream & Inspector</h2>
-            <div class="cards-grid">
 
-                <!-- Float 32 -->
-                <div class="card">
-                    <div class="card-header">Float 32 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float32.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
-                            </div>
-                        </template>
+            <!-- Float 64 -->
+            <div class="type-section">
+                <h3>Float 64</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">Float 64 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float64.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 64 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float64.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 64 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float64.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 64 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float64.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">Float 32 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float32.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Float 32 - Mid-Big (BADC)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float32.mb">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Float 32 - Mid-Little (CDAB)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float32.ml">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <!-- Float 64 -->
-                <div class="card wide">
-                    <div class="card-header">Float 64 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float64.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">Float 64 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float64.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">Float 64 - Mid-Big (BADC)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float64.mb">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">Float 64 - Mid-Little (CDAB)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.float64.ml">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight"
-                                    x-text="typeof item.val === 'number' ? item.val.toPrecision(15) : item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- INT 64 -->
-                <div class="card wide">
-                    <div class="card-header">INT 64 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int64.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- Float 32 -->
+            <div class="type-section">
+                <h3>Float 32</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">Float 32 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float32.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 32 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float32.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 32 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float32.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Float 32 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.float32.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight"
+                                        x-text="typeof item.val === 'number' ? item.val.toPrecision(7) : item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card wide">
-                    <div class="card-header">INT 64 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int64.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">INT 64 - Mid-Big (BADC)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int64.mb">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">INT 64 - Mid-Little (CDAB)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int64.ml">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- UINT 64 -->
-                <div class="card wide">
-                    <div class="card-header">UINT 64 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint64.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- INT 64 -->
+            <div class="type-section">
+                <h3>INT 64</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">INT 64 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int64.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 64 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int64.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 64 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int64.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 64 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int64.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card wide">
-                    <div class="card-header">UINT 64 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint64.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">UINT 64 - Mid-Big (BADC)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint64.mb">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card wide">
-                    <div class="card-header">UINT 64 - Mid-Little (CDAB)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint64.ml">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- INT 32 -->
-                <div class="card">
-                    <div class="card-header">INT 32 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int32.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- UINT 64 -->
+            <div class="type-section">
+                <h3>UINT 64</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">UINT 64 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint64.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 64 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint64.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 64 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint64.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card wide">
+                        <div class="card-header">UINT 64 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint64.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">INT 32 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int32.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">INT 32 - Mid-Big (BADC)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int32.mb">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">INT 32 - Mid-Little (CDAB)</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int32.ml">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- UINT 32 -->
-                <div class="card">
-                    <div class="card-header">UINT 32 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint32.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- INT 32 -->
+            <div class="type-section">
+                <h3>INT 32</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">INT 32 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int32.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 32 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int32.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 32 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int32.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 32 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int32.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">UINT 32 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint32.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- UINT 16 -->
-                <div class="card">
-                    <div class="card-header">UINT 16 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint16.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- UINT 32 -->
+            <div class="type-section">
+                <h3>UINT 32</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">UINT 32 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint32.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 32 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint32.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 32 - Mid-Big (BADC)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint32.mb">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 32 - Mid-Little (CDAB)</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint32.ml">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">UINT 16 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint16.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- 16 bit -->
-                <div class="card">
-                    <div class="card-header">INT 16 - Big Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int16.be">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- 16-bit & 8-bit Combined or Separated? User said "extera" implying pattern. I'll Separate. -->
+            <!-- INT 16 -->
+            <div class="type-section">
+                <h3>16-bit Integers</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">UINT 16 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint16.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">UINT 16 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint16.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 16 - Big Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int16.be">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">INT 16 - Little Endian</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int16.le">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">INT 16 - Little Endian</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int16.le">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            </div>
 
-                <!-- 8 bit -->
-                <div class="card">
-                    <div class="card-header">INT 8</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.int8">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+            <!-- 8-bit -->
+            <div class="type-section">
+                <h3>8-bit Integers</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">INT 8</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.int8">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">UINT 8</div>
-                    <div class="card-list">
-                        <template x-for="item in decodedStreams.uint8">
-                            <div class="chip-row">
-                                <span class="chip" x-text="'0x' + item.hex"></span>
-                                <span class="chip highlight" x-text="item.val"></span>
-                            </div>
-                        </template>
+                    <div class="card">
+                        <div class="card-header">UINT 8</div>
+                        <div class="card-list">
+                            <template x-for="item in decodedStreams.uint8">
+                                <div class="chip-row">
+                                    <span class="chip" x-text="'0x' + item.hex"></span>
+                                    <span class="chip highlight" x-text="item.val"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
