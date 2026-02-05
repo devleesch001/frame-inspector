@@ -6,6 +6,8 @@ Que vous travailliez sur des protocoles réseau, du débogage de fichiers binair
 
 **[Accéder à l'outil en ligne](https://devleesch001.github.io/frame-inspector/)**
 
+![Frame Inspector](preview.webp)
+
 ---
 
 ## Fonctionnalités Principales
