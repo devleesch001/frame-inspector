@@ -98,22 +98,19 @@
                     </div>
 
                 </div>
-            </div>
 
-            <div class="controls">
-                <div class="control-group">
-                    <label style="margin:0">Offset (bytes)</label>
-                    <input type="number" x-model.number="offset" min="0" :max="maxOffset">
-                </div>
-
-
-
-                <div class="control-group">
-                    <label style="margin:0">Preview:</label>
-                    <code x-text="results.hex"
-                        style="font-family:'Roboto Mono'; color: var(--md-sys-color-primary);"></code>
+                <!-- Hex Preview -->
+                <div class="control-group" x-show="hexPreview" style="width: 100%;">
+                    <div
+                        style="font-size: 14px; font-weight: 500; color: var(--md-sys-color-secondary); white-space: nowrap; padding-top: 1px;">
+                        Hex Preview:</div>
+                    <div x-text="hexPreview"
+                        style="font-family: 'Roboto Mono', monospace; font-size: 13px; color: var(--md-sys-color-on-surface); word-break: break-all; flex: 1; line-height: 1.4;">
+                    </div>
                 </div>
             </div>
+
+
         </div>
 
         <!-- Dashboard -->

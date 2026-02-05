@@ -256,11 +256,10 @@ function frameInspector() {
     return {
         rawInput: '48656c6c6f00000040490fdb',
         inputMode: 'Auto',
-        byteLength: 0,
-        offset: 0,
         inputType: null,
         inputError: null,
         detectedModes: [],
+        hexPreview: '',
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -281,10 +280,6 @@ function frameInspector() {
             this.$watch('inputMode', () => this.parse());
         },
 
-        get maxOffset() {
-            return this.byteLength || 0;
-        },
-
         parse() {
             const { bytes, type, error, detectedModes } = InspectorCore.parseInput(this.rawInput, this.inputMode);
             this.inputType = type;
@@ -292,30 +287,15 @@ function frameInspector() {
             this.detectedModes = detectedModes || [];
 
             if (error || !bytes || bytes.length === 0) {
+                this.hexPreview = '';
                 return;
             }
-            this.byteLength = bytes.length;
+            // Generate Hex Preview (0xAA 0xBB format)
+            this.hexPreview = Array.from(bytes)
+                .map(b => '0x' + b.toString(16).padStart(2, '0').toUpperCase())
+                .join(' ');
+
             this.decodedStreams = InspectorCore.generateAllLists(bytes);
-        },
-
-        scan() {
-            const { bytes, error } = InspectorCore.parseInput(this.rawInput, 'Auto'); // Always scan in Auto? Or current mode? Auto seems safer for scan.
-            if (error || !bytes || bytes.length < 4) return;
-
-            let bestOffset = -1;
-            for (let i = 0; i < bytes.length - 4; i++) {
-                let isString = true;
-                for (let j = 0; j < 4; j++) {
-                    const c = bytes[i + j];
-                    if (c < 32 || c > 126) { isString = false; break; }
-                }
-                if (isString) { bestOffset = i; break; }
-            }
-            if (bestOffset !== -1) {
-                this.offset = bestOffset;
-            } else {
-                alert("No obvious patterns found.");
-            }
         }
     }
 }
