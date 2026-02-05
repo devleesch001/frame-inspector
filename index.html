@@ -106,7 +106,7 @@
                 </div>
                 <!-- Text -->
                 <div class="control-group w-full gap-3 m-0" x-show="textPreview">
-                    <div class="preview-label">Text:</div>
+                    <div class="preview-label">ASCII:</div>
                     <pre x-text="textPreview" class="preview-content"></pre>
                 </div>
                 <!-- Base64 -->
@@ -221,7 +221,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">INT 32 - Big Endian</div>
+                        <div class="card-header">INT 32 - Big Endian (ABCD)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int32.be">
                                 <div class="chip-row">
@@ -232,7 +232,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">INT 32 - Little Endian</div>
+                        <div class="card-header">INT 32 - Little Endian (DCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int32.le">
                                 <div class="chip-row">
@@ -275,7 +275,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">UINT 32 - Big Endian</div>
+                        <div class="card-header">UINT 32 - Big Endian (ABCD)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint32.be">
                                 <div class="chip-row">
@@ -286,7 +286,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">UINT 32 - Little Endian</div>
+                        <div class="card-header">UINT 32 - Little Endian (DCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint32.le">
                                 <div class="chip-row">
@@ -329,7 +329,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">Float 32 - Big Endian</div>
+                        <div class="card-header">Float 32 - Big Endian (ABCD)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float32.be">
                                 <div class="chip-row">
@@ -341,7 +341,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">Float 32 - Little Endian</div>
+                        <div class="card-header">Float 32 - Little Endian (DCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float32.le">
                                 <div class="chip-row">
@@ -387,7 +387,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">INT 64 - Big Endian</div>
+                        <div class="card-header">INT 64 - Big Endian (ABCDEFGH)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int64.be">
                                 <div class="chip-row">
@@ -398,7 +398,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">INT 64 - Little Endian</div>
+                        <div class="card-header">INT 64 - Little Endian (HGFEDCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int64.le">
                                 <div class="chip-row">
@@ -409,7 +409,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">INT 64 - Mid-Big (BADC)</div>
+                        <div class="card-header">INT 64 - Mid-Big (BADCFEHG)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int64.mb">
                                 <div class="chip-row">
@@ -420,7 +420,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">INT 64 - Mid-Little (CDAB)</div>
+                        <div class="card-header">INT 64 - Mid-Little (GHEFCDAB)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.int64.ml">
                                 <div class="chip-row">
@@ -441,7 +441,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">UINT 64 - Big Endian</div>
+                        <div class="card-header">UINT 64 - Big Endian (ABCDEFGH)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint64.be">
                                 <div class="chip-row">
@@ -452,7 +452,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">UINT 64 - Little Endian</div>
+                        <div class="card-header">UINT 64 - Little Endian (HGFEDCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint64.le">
                                 <div class="chip-row">
@@ -463,7 +463,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">UINT 64 - Mid-Big (BADC)</div>
+                        <div class="card-header">UINT 64 - Mid-Big (BADCFEHG)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint64.mb">
                                 <div class="chip-row">
@@ -474,7 +474,7 @@
                         </div>
                     </div>
                     <div class="card wide">
-                        <div class="card-header">UINT 64 - Mid-Little (CDAB)</div>
+                        <div class="card-header">UINT 64 - Mid-Little (GHEFCDAB)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.uint64.ml">
                                 <div class="chip-row">
@@ -495,7 +495,7 @@
                 </h3>
                 <div class="cards-grid" x-show="open" x-transition>
                     <div class="card">
-                        <div class="card-header">Float 64 - Big Endian</div>
+                        <div class="card-header">Float 64 - Big Endian (ABCDEFGH)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float64.be">
                                 <div class="chip-row">
@@ -507,7 +507,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">Float 64 - Little Endian</div>
+                        <div class="card-header">Float 64 - Little Endian (HGFEDCBA)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float64.le">
                                 <div class="chip-row">
@@ -519,7 +519,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">Float 64 - Mid-Big (BADC)</div>
+                        <div class="card-header">Float 64 - Mid-Big (BADCFEHG)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float64.mb">
                                 <div class="chip-row">
@@ -531,7 +531,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">Float 64 - Mid-Little (CDAB)</div>
+                        <div class="card-header">Float 64 - Mid-Little (GHEFCDAB)</div>
                         <div class="card-list">
                             <template x-for="item in decodedStreams.float64.ml">
                                 <div class="chip-row">

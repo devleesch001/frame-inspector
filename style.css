@@ -97,6 +97,16 @@ h1 {
     padding-bottom: 16px;
 }
 
+.input-section::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background-color: var(--md-sys-color-surface-container);
+}
+
 .text-field {
     position: relative;
     background-color: var(--md-sys-color-surface-container-highest);
