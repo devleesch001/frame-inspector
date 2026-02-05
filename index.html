@@ -5,6 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frame Inspector</title>
+    <meta name="description"
+        content="Advanced tool for inspecting and decoding binary data frames (Hex, Base64, Array).">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Frame Inspector">
+    <meta property="og:description"
+        content="Advanced tool for inspecting and decoding binary data frames (Hex, Base64, Array).">
+    <meta property="og:image" content="https://devleesch001.github.io/frame-inspector/preview.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Frame Inspector">
+    <meta property="twitter:description"
+        content="Advanced tool for inspecting and decoding binary data frames (Hex, Base64, Array).">
+    <meta property="twitter:image" content="https://devleesch001.github.io/frame-inspector/preview.webp">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Placeholder SVG Favicon (Package Icon) to avoid 404 if file missing -->
+    <!-- You can replace this with: <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
     <!-- Roboto Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +42,8 @@
 </head>
 
 <body x-data="frameInspector()">
-    <header>
+    <header style="display: flex; justify-content: flex-start; gap: 12px; align-items: center;">
+        <img src="frame-inspector.svg" alt="Frame Inspector Logo" width="64" height="64">
         <h1>Frame Inspector</h1>
     </header>
 
