@@ -299,7 +299,7 @@ input:checked+.slider:before {
     color: var(--md-sys-color-secondary);
 }
 
-.chip-container {
+.chip-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -312,7 +312,7 @@ input:checked+.slider:before {
     padding: 8px 12px;
     display: flex;
     flex-direction: column;
-    min-width: 80px;
+    flex: 1 1 140px;
 }
 
 .chip-hex {
@@ -343,21 +343,7 @@ input:checked+.slider:before {
     background: var(--md-sys-color-outline);
 }
 
-.btn-primary {
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    border: none;
-    padding: 10px 24px;
-    border-radius: var(--md-sys-shape-corner-full);
 
-    font: var(--md-sys-typescale-label-large);
-    cursor: pointer;
-    transition: box-shadow 0.2s;
-}
-
-.btn-primary:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
 
 /* Cards Grid Layout (Unified View) */
 .type-section {
@@ -377,6 +363,12 @@ input:checked+.slider:before {
     grid-template-columns: repeat(auto-fill, minmax(405px, 1fr));
     gap: 16px;
     max-width: 1700px;
+}
+
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Component: Section Header (Collapsible) */
