@@ -130,12 +130,13 @@ textarea {
 }
 
 .control-group {
+    min-height: 42px;
     display: flex;
     align-items: center;
     gap: 12px;
     background-color: var(--md-sys-color-surface-container-high);
     padding: 8px 16px;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: 20px;
     /* Pill shape */
 }
 
@@ -436,7 +437,7 @@ input:checked+.slider:before {
     border-radius: 3px;
 }
 
-.ambiguity-badge {
+.badge {
     background-color: var(--md-sys-color-tertiary-container);
     color: var(--md-sys-color-on-tertiary-container);
     padding: 2px 6px;
@@ -445,4 +446,181 @@ input:checked+.slider:before {
     margin-left: 8px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
+}
+
+/* --- New Refactored Architecture --- */
+
+/* Utility Classes */
+.d-flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.align-start {
+    align-items: flex-start;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.gap-1 {
+    gap: 4px;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-3 {
+    gap: 12px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mt-1 {
+    margin-top: 4px;
+}
+
+.mt-2 {
+    margin-top: 8px;
+}
+
+.mb-1 {
+    margin-bottom: 4px;
+}
+
+.mb-2 {
+    margin-bottom: 8px;
+}
+
+.text-xs {
+    font-size: 10px;
+}
+
+.text-sm {
+    font-size: 12px;
+}
+
+.text-base {
+    font-size: 14px;
+}
+
+.text-mono {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* Colors (semantic mapping) */
+.text-secondary {
+    color: var(--md-sys-color-secondary);
+}
+
+.text-error {
+    color: var(--md-sys-color-error);
+}
+
+.text-primary {
+    color: var(--md-sys-color-primary);
+}
+
+.text-on-surface {
+    color: var(--md-sys-color-on-surface);
+}
+
+/* Component: Radio Group */
+.radio-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.radio-label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--md-sys-color-on-surface);
+}
+
+.radio-input {
+    accent-color: var(--md-sys-color-primary);
+}
+
+/* Component: Hex Preview */
+.hex-preview-row {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.hex-preview-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-secondary);
+    white-space: nowrap;
+    padding-top: 1px;
+}
+
+.preview-content {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface);
+    word-break: break-all;
+    flex: 1;
+    line-height: 1.4;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.p-0 {
+    padding: 0;
 }

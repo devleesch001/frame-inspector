@@ -35,37 +35,33 @@
             </div>
 
             <!-- Feedback Section (Styled as Control Group) -->
-            <div class="controls" style="padding: 0;">
-                <div class="control-group"
-                    style="width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-
+            <div class="controls p-0">
+                <div class="control-group w-full justify-between flex-wrap gap-3">
                     <!-- Feedback Messages -->
-                    <div style="display:flex; align-items:center;">
+                    <div class="d-flex align-center">
                         <!-- Default State -->
                         <template x-if="!inputError && !inputType">
-                            <div style="color: var(--md-sys-color-secondary); font-size: 14px;">
+                            <div class="text-secondary text-base">
                                 No data
                             </div>
                         </template>
 
                         <!-- Error State -->
                         <template x-if="inputError">
-                            <div
-                                style="color: var(--md-sys-color-error); font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <div class="text-error font-bold d-flex align-center gap-2 text-base">
                                 <span>⚠</span> <span x-text="inputError"></span>
                             </div>
                         </template>
 
                         <!-- Valid State -->
                         <template x-if="!inputError && inputType">
-                            <div
-                                style="color: var(--md-sys-color-primary); display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <div class="text-primary d-flex align-center gap-2 text-base">
                                 <span>✓</span>
                                 <span x-text="'Detected: ' + inputType"></span>
 
                                 <!-- Ambiguity Hint -->
                                 <template x-if="inputMode === 'Auto' && detectedModes.length > 1">
-                                    <span class="ambiguity-badge">
+                                    <span class="badge">
                                         Ambiguous!
                                     </span>
                                 </template>
@@ -74,39 +70,40 @@
                     </div>
 
                     <!-- Mode Selection (Radios) -->
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <label
-                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
-                            <input type="radio" x-model="inputMode" value="Auto"
-                                style="accent-color: var(--md-sys-color-primary);"> Auto
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" x-model="inputMode" value="Auto" class="radio-input"> Auto
                         </label>
-                        <label
-                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
-                            <input type="radio" x-model="inputMode" value="Hex"
-                                style="accent-color: var(--md-sys-color-primary);"> Hex
+                        <label class="radio-label">
+                            <input type="radio" x-model="inputMode" value="Hex" class="radio-input"> Hex
                         </label>
-                        <label
-                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
-                            <input type="radio" x-model="inputMode" value="Base64"
-                                style="accent-color: var(--md-sys-color-primary);"> Base64
+                        <label class="radio-label">
+                            <input type="radio" x-model="inputMode" value="Base64" class="radio-input"> Base64
                         </label>
-                        <label
-                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
-                            <input type="radio" x-model="inputMode" value="Array"
-                                style="accent-color: var(--md-sys-color-primary);"> Array
+                        <label class="radio-label">
+                            <input type="radio" x-model="inputMode" value="Array" class="radio-input"> Array
                         </label>
                     </div>
 
                 </div>
 
-                <!-- Hex Preview -->
-                <div class="control-group" x-show="hexPreview" style="width: 100%;">
-                    <div
-                        style="font-size: 14px; font-weight: 500; color: var(--md-sys-color-secondary); white-space: nowrap; padding-top: 1px;">
-                        Hex Preview:</div>
-                    <div x-text="hexPreview"
-                        style="font-family: 'Roboto Mono', monospace; font-size: 13px; color: var(--md-sys-color-on-surface); word-break: break-all; flex: 1; line-height: 1.4;">
-                    </div>
+                <!-- Previews -->
+                <!-- Hex -->
+                <div class="control-group w-full gap-2" x-show="hexPreview">
+                    <div class="preview-label">Hex Preview:</div>
+                    <pre x-text="hexPreview" class="preview-content"></pre>
+                </div>
+
+                <!-- Base64 Preview -->
+                <div class="control-group w-full gap-2" x-show="base64Preview">
+                    <div class="preview-label">Base64 Preview:</div>
+                    <pre x-text="base64Preview" class="preview-content"></pre>
+                </div>
+
+                <!-- Array Preview -->
+                <div class="control-group w-full gap-2" x-show="arrayPreview">
+                    <div class="preview-label">Array Preview:</div>
+                    <pre x-text="arrayPreview" class="preview-content"></pre>
                 </div>
             </div>
 
@@ -115,7 +112,7 @@
 
         <!-- Dashboard -->
         <div class="result-section">
-            <h2 class="section-title">Expanded Stream & Inspector</h2>
+            <h2 class="section-title">Number Inspector</h2>
 
             <!-- 8-bit -->
             <div class="type-section">

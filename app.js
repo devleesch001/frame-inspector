@@ -260,6 +260,8 @@ function frameInspector() {
         inputError: null,
         detectedModes: [],
         hexPreview: '',
+        base64Preview: '',
+        arrayPreview: '',
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -288,12 +290,24 @@ function frameInspector() {
 
             if (error || !bytes || bytes.length === 0) {
                 this.hexPreview = '';
+                this.base64Preview = '';
+                this.arrayPreview = '';
                 return;
             }
             // Generate Hex Preview (0xAA 0xBB format)
             this.hexPreview = Array.from(bytes)
                 .map(b => '0x' + b.toString(16).padStart(2, '0').toUpperCase())
                 .join(' ');
+
+            // Generate Base64 Preview
+            let binary = '';
+            for (let i = 0; i < bytes.length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            this.base64Preview = btoa(binary);
+
+            // Generate Array Preview
+            this.arrayPreview = '[' + Array.from(bytes).join(', ') + ']';
 
             this.decodedStreams = InspectorCore.generateAllLists(bytes);
         }
