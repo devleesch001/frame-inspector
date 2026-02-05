@@ -79,7 +79,7 @@ h1 {
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 8px;
     flex: 1;
     overflow: hidden;
     /* For scrolling content inside */
@@ -222,7 +222,7 @@ input:checked+.slider:before {
 .section-title {
     font: var(--md-sys-typescale-headline-large);
     color: var(--md-sys-color-primary);
-    margin: 24px 0 16px 0;
+    margin: 16px 0 16px 0;
 }
 
 .table-container {
@@ -350,7 +350,7 @@ input:checked+.slider:before {
 
 /* Cards Grid Layout (Unified View) */
 .type-section {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 }
 
 .type-section h3 {
@@ -366,7 +366,28 @@ input:checked+.slider:before {
     grid-template-columns: repeat(auto-fill, minmax(405px, 1fr));
     gap: 16px;
     max-width: 1700px;
-    /* Enforce max ~4 cards */
+}
+
+/* Component: Section Header (Collapsible) */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.section-header:hover {
+    color: var(--md-sys-color-primary);
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
 }
 
 .card {

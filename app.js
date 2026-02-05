@@ -262,6 +262,7 @@ function frameInspector() {
         hexPreview: '',
         base64Preview: '',
         arrayPreview: '',
+        textPreview: '',
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -292,6 +293,7 @@ function frameInspector() {
                 this.hexPreview = '';
                 this.base64Preview = '';
                 this.arrayPreview = '';
+                this.textPreview = '';
                 return;
             }
             // Generate Hex Preview (0xAA 0xBB format)
@@ -308,6 +310,9 @@ function frameInspector() {
 
             // Generate Array Preview
             this.arrayPreview = '[' + Array.from(bytes).join(', ') + ']';
+
+            // Generate Text Preview (ASCII safe)
+            this.textPreview = Array.from(bytes).map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.').join('');
 
             this.decodedStreams = InspectorCore.generateAllLists(bytes);
         }
