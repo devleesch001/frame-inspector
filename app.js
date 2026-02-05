@@ -9,9 +9,7 @@ const InspectorCore = {
         // --- Parsers ---
 
         const parseArray = (str) => {
-            const hasSeparators = /[\s,\[\]\(\)\{\}]/.test(str);
-            if (!hasSeparators) return null;
-            // Remove brackets/braces
+            // Remove brackets/braces (optional for single items)
             const cleaned = str.replace(/[\[\]\(\)\{\}]/g, '');
             const items = cleaned.split(/[\s,]+/).filter(x => x);
             if (items.length === 0) return null;
