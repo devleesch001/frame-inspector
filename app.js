@@ -9,9 +9,10 @@ const InspectorCore = {
         // --- Parsers ---
 
         const parseArray = (str) => {
-            const hasSeparators = /[\s,\[\]]/.test(str);
+            const hasSeparators = /[\s,\[\]\(\)\{\}]/.test(str);
             if (!hasSeparators) return null;
-            const cleaned = str.replace(/[\[\]]/g, '');
+            // Remove brackets/braces
+            const cleaned = str.replace(/[\[\]\(\)\{\}]/g, '');
             const items = cleaned.split(/[\s,]+/).filter(x => x);
             if (items.length === 0) return null;
 
@@ -26,6 +27,9 @@ const InspectorCore = {
                     bytes.push(val);
                     isHex = true;
                 } else {
+                    // Strict Decimal Check: Must be digits only
+                    if (!/^\d+$/.test(item)) return null;
+
                     const val = parseInt(item, 10);
                     if (isNaN(val)) return null;
                     if (val > 255 || val < 0) return null; // Strict array check for now
@@ -38,11 +42,14 @@ const InspectorCore = {
         };
 
         const parseHex = (str) => {
+            // Remove whitespaces for raw hex dump support (e.g. "48 65 6c")
+            const cleanStr = str.replace(/\s+/g, '');
+
             // Handle 0x prefix
-            let hex = str;
+            let hex = cleanStr;
             let explicit = false;
-            if (str.toLowerCase().startsWith('0x')) {
-                hex = str.substring(2);
+            if (cleanStr.toLowerCase().startsWith('0x')) {
+                hex = cleanStr.substring(2);
                 explicit = true;
             }
             if (!/^[0-9A-Fa-f]+$/.test(hex)) return null;
@@ -54,6 +61,9 @@ const InspectorCore = {
         };
 
         const parseBase64 = (str) => {
+            // Strict check: No spaces allowed in Base64 mode
+            if (/\s/.test(str)) return null;
+
             try {
                 // Remove whitespaces? base64 shouldn't have them usually but `atob` might fail or ignore.
                 // Strict check: Base64 chars only? 

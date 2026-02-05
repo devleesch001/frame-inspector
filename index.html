@@ -68,20 +68,16 @@
                         </template>
                     </div>
 
-                    <!-- Mode Selection (Radios) -->
-                    <div class="radio-group">
-                        <label class="radio-label">
-                            <input type="radio" x-model="inputMode" value="Auto" class="radio-input"> Auto
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" x-model="inputMode" value="Hex" class="radio-input"> Hex
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" x-model="inputMode" value="Base64" class="radio-input"> Base64
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" x-model="inputMode" value="Array" class="radio-input"> Array
-                        </label>
+                    <!-- Mode Selection (Segmented Control) -->
+                    <div class="segmented-control">
+                        <button class="segment-btn" :class="{ 'active': inputMode === 'Auto' }"
+                            @click="inputMode = 'Auto'">Auto</button>
+                        <button class="segment-btn" :class="{ 'active': inputMode === 'Hex' }"
+                            @click="inputMode = 'Hex'">Hex</button>
+                        <button class="segment-btn" :class="{ 'active': inputMode === 'Base64' }"
+                            @click="inputMode = 'Base64'">Base64</button>
+                        <button class="segment-btn" :class="{ 'active': inputMode === 'Array' }"
+                            @click="inputMode = 'Array'">Array</button>
                     </div>
 
                 </div>

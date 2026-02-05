@@ -345,10 +345,39 @@ input:checked+.slider:before {
 
 
 
-/* Cards Grid Layout (Unified View) */
-.type-section {
-    margin-bottom: 16px;
+/* Segmented Button Group */
+.segmented-control {
+    display: flex;
+    background-color: var(--md-sys-color-surface-container-high);
+    padding: 4px;
+    border-radius: 20px;
+    /* Pill-like container */
+    gap: 4px;
+    width: fit-content;
 }
+
+.segment-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 16px;
+    /* Pill buttons */
+    color: var(--md-sys-color-on-surface);
+    font: var(--md-sys-typescale-label-large);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.segment-btn:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.segment-btn.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+/* Use Secondary Container for selection state as per Material 3 usually, or Primary */
 
 .type-section h3 {
     font: var(--md-sys-typescale-title-medium);
