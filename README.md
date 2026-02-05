@@ -1,51 +1,43 @@
 # Frame Inspector
 
-**Frame Inspector** est un outil web puissant et intuitif conçu pour les développeurs, ingénieurs. Il permet d'inspecter, d'analyser et de décoder instantanément des trames de données binaires brutes en une multitude de formats interprétables.
+Frame Inspector est un outil technique conçu pour l'analyse et le décodage de trames de données binaires. Il permet d'inspecter des données brutes converties instantanément en multiples formats interprétables.
 
-Que vous travailliez sur des protocoles réseau, du débogage de fichiers binaires ou de l'analyse de paquets IoT, Frame Inspector vous offre une vue unifiée de vos données sous toutes leurs formes possibles (Entiers, Flottants, Endianness varié et certain type exotique, ASCII, etc.).
+L'objectif est de fournir une visualisation claire des données pour des tâches telles que le débogage de protocoles réseaux ou l'analyse de fichiers binaires. L'outil gère différents types de nombres (entiers, flottants) et plusieurs ordres d'octets (endianness).
 
-**[Accéder à l'outil en ligne](https://devleesch001.github.io/frame-inspector/)**
+[Accéder à l'outil en ligne](https://devleesch001.github.io/frame-inspector/)
 
 ![Frame Inspector](preview.webp)
 
 ---
 
-## Fonctionnalités Principales
+## Fonctionnalités
 
--   **Multi-Format Input** : Détection automatique et prise en charge des entrées :
-    -   **Hexadécimal** (brut ou formaté avec `0x`, espaces acceptés).
-    -   **Base64**.
-    -   **Tableaux** (Array d'entiers décimaux, ex: `[10, 255]`).
--   **Décodage Complet** : Visualisez vos données interprétées comme :
-    -   `Int8`, `Uint8`
-    -   `Int16`, `Uint16`
-    -   `Int32`, `Uint32`
-    -   `Int64`, `Uint64` (Support complet 64-bit)
-    -   `Float32`, `Float64`
--   **Gestion de l'Endianness** : Support exhaustif pour toutes les architectures :
-    -   Big Endian
-    -   Little Endian
-    -   Mid-Big / Mid-Little (pour les formats exotiques)
--   **Aperçus Rapides** : Conversion instantanée vers ASCII, Hex, Base64 et Array JS.
--   **Interface Moderne** : UI sombre, responsive, avec "Segmented Controls" et affichage en grille adaptatif.
+*   **Entrées Multi-Format** : Prise en charge des formats suivants :
+    *   **Hexadécimal** (formats bruts ou préfixés par `0x`).
+    *   **Base64**.
+    *   **Tableaux** (liste d'entiers décimaux).
+*   **Décodage** : Interprétation des données en :
+    *   `Int8`, `Uint8`
+    *   `Int16`, `Uint16`
+    *   `Int32`, `Uint32`
+    *   `Int64`, `Uint64`
+    *   `Float32`, `Float64`
+*   **Endianness** : Support des architectures Big Endian, Little Endian, et formats mixtes.
+*   **Conversions** : Visualisation ASCII, Hexadécimale, Base64 et Array.
 
 ---
 
-## 🛠 Comment l'utiliser
+## Utilisation
 
-1.  **Collez vos données** dans la zone de texte principale ("Input Data").
-2.  L'outil détecte automatiquement le format ("Auto"). En cas d'ambiguïté (par exemple `10` qui peut être `0x10` ou `[10]`), un badge **"Ambiguous!"** apparaît. Vous pouvez alors forcer le mode via les boutons (Hex, Base64, Array).
-3.  **Explorez les résultats** : Faites défiler pour voir comment vos octets sont interprétés dans différents types (Int, Float...) et ordres (Endianness).
-4.  Utilisez les **flèches** pour replier les sections qui ne vous intéressent pas.
+1.  Collez les données dans la zone de texte principale.
+2.  Le format est détecté automatiquement. Si une ambiguïté existe (ex: `10` peut être `0x10` ou `[10]`), l'utilisateur peut sélectionner le mode souhaité manuellement.
+3.  Les résultats s'affichent sous forme de cartes détaillant chaque interprétation possible.
 
 ---
 
-## Exemples d'Entrées Valides
+## Exemples d'Entrées
 
-Voici des exemples de chaînes que vous pouvez tester :
-
-### Hexadécimal (Hex)
-Accepte les formats bruts, avec espaces, ou préfixés.
+### Hexadécimal
 ```text
 48 65 6c 6c 6f 21
 0x48 0x65 0x6c 0x6c 0x6f
@@ -53,13 +45,11 @@ Accepte les formats bruts, avec espaces, ou préfixés.
 ```
 
 ### Base64
-Idéal pour décoder des payload web ou email.
 ```text
 SGVsbG8gV29ybGQ=
 ```
 
 ### Tableau / Array
-Liste d'octets décimaux (0-255). Supporte les parenthèses `()`, crochets `[]` et accolades `{}`.
 ```text
 [72, 101, 108, 108, 111]
 (10, 20, 30)
@@ -68,29 +58,35 @@ Liste d'octets décimaux (0-255). Supporte les parenthèses `()`, crochets `[]` 
 
 ---
 
-## Pochaines Fonctionnalités (To-Do List)
+## Prochaines Fonctionnalités
 
--   [ ] **Recherche Globale** : Pouvoir rechercher un nombre spécifique dans toute la structure interprétée, indépendamment de son type ou de sa représentation (Hex, Dec, etc.).
--   [ ] **Inspection au Survol** : Afficher les détails de la trame brute correspondante au survol de la souris sur une valeur décodée.
+*   [ ] **Recherche Globale** : Recherche d'une valeur numérique spécifique dans toute la structure.
 
+*   [ ] **Upload de fichier** : Pouvoir uploader un fichier pour l'inspecter.
+
+*   [ ] **Detection de type de fichier** : 
+    *   PDF
+    *   Image (PNG, JPG, WEB, ...)
+    *   Archive (ZIP, TAR)
+    *   Video (MP4, AVI, ...)
+    *   Audio (MP3, WAV, ...)
+
+*   [ ] **Inspection au Survol** : Affichage des détails de la trame brute au survol d'une valeur.
+
+*   [ ] **Ajouter des formats exotiques** : 
+    *   BCD
+    *   IEEE 754 
 ---
 
 ## Signaler un Bug
 
-Si vous rencontrez un comportement inattendu, une erreur de décodage ou si vous avez une suggestion d'amélioration :
+Pour signaler un problème ou proposer une amélioration :
 
-1.  Rendez-vous sur l'onglet **[Issues](https://github.com/devleesch001/frame-inspector/issues)** du dépôt GitHub.
-2.  Créez une **New Issue**.
-3.  Décrivez le problème et fournissez si possible la chaîne de caractères (Input) qui a causé l'erreur.
-
----
-
-## Crédits & Intelligence Artificielle
-
-Ce projet est particulier : **il a été entièrement réalisé par une Intelligence Artificielle**.
-
--   **Conception, Design, Code (HTML/CSS/JS) et Documentation** : Générés par l'IA (Agent Antigravity de Google DeepMind).
--   **Objectif** : Tester la capacité de l'IA à créer des outils fonctionnels et esthétiques.
+1.  Accédez à l'onglet [Issues](https://github.com/devleesch001/frame-inspector/issues) du dépôt GitHub.
+2.  Créez une nouvelle issue en décrivant le problème et en fournissant l'entrée qui a causé l'erreur.
 
 ---
 
+## Crédits
+
+Ce projet a été réalisé avec l'assistance d'une Intelligence Artificielle (Agent Antigravity de Google DeepMind) pour le code et la documentation.
