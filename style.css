@@ -54,7 +54,7 @@ body {
     background-color: var(--md-sys-color-surface);
     color: var(--md-sys-color-on-surface);
     font: var(--md-sys-typescale-body-large);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 24px;
@@ -81,8 +81,7 @@ h1 {
     flex-direction: column;
     gap: 8px;
     flex: 1;
-    overflow: hidden;
-    /* For scrolling content inside */
+    /* overflow: hidden; Removed to allow page scroll */
 }
 
 /* Input Section */
@@ -91,6 +90,11 @@ h1 {
     flex-direction: column;
     gap: 16px;
     flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+    z-index: 10;
+    background-color: var(--md-sys-color-surface-container);
+    padding-bottom: 16px;
 }
 
 .text-field {
@@ -210,11 +214,8 @@ input:checked+.slider:before {
     flex-direction: column;
     gap: 16px;
     flex: 1;
-    overflow-y: auto;
     padding-right: 8px;
-    /* For scrollbar space */
-    min-height: 0;
-    /* Important for flex child scrolling */
+    min-height: 600px;
     min-width: 0;
 }
 
