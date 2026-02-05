@@ -1,91 +1,134 @@
 // Core Logic (Testable)
 const InspectorCore = {
-    parseInput(input) {
-        const result = { bytes: new Uint8Array([]), type: null, error: null };
+    parseInput(input, mode = 'Auto') {
+        const result = { bytes: new Uint8Array([]), type: null, error: null, detectedModes: [] };
         if (!input) return result;
         const trimmed = input.trim();
         if (!trimmed) return result;
 
-        // 1. Detect Separators (Space, Comma, Brackets)
-        const hasSeparators = /[\s,\[\]]/.test(trimmed);
+        // --- Parsers ---
 
-        if (hasSeparators) {
-            const cleaned = trimmed.replace(/[\[\]]/g, '');
+        const parseArray = (str) => {
+            const hasSeparators = /[\s,\[\]]/.test(str);
+            if (!hasSeparators) return null;
+            const cleaned = str.replace(/[\[\]]/g, '');
             const items = cleaned.split(/[\s,]+/).filter(x => x);
+            if (items.length === 0) return null;
+
             const bytes = [];
             let isHex = false;
             let isDecimal = false;
 
             for (const item of items) {
-                const isExplicitHex = item.toLowerCase().startsWith('0x');
-                if (isExplicitHex) {
-                    const parsed = parseInt(item, 16);
-                    if (isNaN(parsed)) {
-                        result.error = `Invalid Hex Value: ${item}`;
-                        return result;
-                    }
-                    bytes.push(parsed);
+                if (item.toLowerCase().startsWith('0x')) {
+                    const val = parseInt(item, 16);
+                    if (isNaN(val)) return null;
+                    bytes.push(val);
                     isHex = true;
                 } else {
-                    // Try Decimal
-                    const parsed = parseInt(item, 10);
-                    // Check if it looks like hex without 0x but valid decimal?
-                    // User rule: "int Array: 16 32". These are decimal.
-                    if (isNaN(parsed)) {
-                        // Could be bad value
-                        result.error = `Invalid Integer Value: ${item}`;
-                        return result;
-                    }
-                    if (parsed > 255 || parsed < 0) {
-                        result.error = `Value out of byte range (0-255): ${item}`;
-                        // We push it anyway? Or stop?
-                    }
-                    bytes.push(parsed);
+                    const val = parseInt(item, 10);
+                    if (isNaN(val)) return null;
+                    if (val > 255 || val < 0) return null; // Strict array check for now
+                    bytes.push(val);
                     isDecimal = true;
                 }
             }
-            result.bytes = new Uint8Array(bytes);
-            result.type = isHex && isDecimal ? "Array (Mixed)" : (isHex ? "Array (Hex)" : "Array (Integer)");
-            return result;
-        }
+            const type = isHex && isDecimal ? "Array (Mixed)" : (isHex ? "Array (Hex)" : "Array (Integer)");
+            return { bytes: new Uint8Array(bytes), type };
+        };
 
-        // 2. Contiguous String
-        // Explicit 0x
-        if (trimmed.toLowerCase().startsWith('0x')) {
-            const hex = trimmed.substring(2);
-            if (!/^[0-9A-Fa-f]+$/.test(hex)) {
-                result.error = "Invalid Hex characters detected";
-                return result;
+        const parseHex = (str) => {
+            // Handle 0x prefix
+            let hex = str;
+            let explicit = false;
+            if (str.toLowerCase().startsWith('0x')) {
+                hex = str.substring(2);
+                explicit = true;
             }
+            if (!/^[0-9A-Fa-f]+$/.test(hex)) return null;
+            // Hex must be valid chars
+
             const safeHex = hex.length % 2 !== 0 ? '0' + hex : hex;
-            result.bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-            result.type = "Hex (Explicit)";
-            return result;
-        }
+            const bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            return { bytes, type: explicit ? "Hex (Explicit)" : "Hex (Continuous)" };
+        };
 
-        // Ambiguous: Hex vs Base64
-        const isHexChars = /^[0-9A-Fa-f]+$/.test(trimmed);
-        if (isHexChars) {
-            const safeHex = trimmed.length % 2 !== 0 ? '0' + trimmed : trimmed;
-            result.bytes = new Uint8Array(safeHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-            result.type = "Hex (Continuous)";
-            return result;
-        }
-
-        // Try Base64
-        try {
-            const binString = atob(trimmed);
-            const bytes = new Uint8Array(binString.length);
-            for (let i = 0; i < binString.length; i++) {
-                bytes[i] = binString.charCodeAt(i);
+        const parseBase64 = (str) => {
+            try {
+                // Remove whitespaces? base64 shouldn't have them usually but `atob` might fail or ignore.
+                // Strict check: Base64 chars only? 
+                // atob ignores non-base64 chars in some environments or throws.
+                // Let's rely on atob success.
+                // Optimization: If it contains '0x', atob might decode it.
+                // 0xAA -> Valid base64.
+                const binString = atob(str);
+                const bytes = new Uint8Array(binString.length);
+                for (let i = 0; i < binString.length; i++) {
+                    bytes[i] = binString.charCodeAt(i);
+                }
+                return { bytes, type: "Base64" };
+            } catch (e) {
+                return null;
             }
-            result.bytes = bytes;
-            result.type = "Base64";
-            return result;
-        } catch (e) {
-            result.error = "Unknown Format / Invalid Base64";
+        };
+
+        // --- Execution ---
+
+        // 1. Forced Mode
+        if (mode === 'Hex') {
+            const res = parseHex(trimmed);
+            if (res) return { ...result, ...res };
+            return { ...result, error: "Invalid Hex String" };
+        }
+        if (mode === 'Base64') {
+            const res = parseBase64(trimmed);
+            if (res) return { ...result, ...res };
+            return { ...result, error: "Invalid Base64 String" };
+        }
+        if (mode === 'Array') {
+            const res = parseArray(trimmed);
+            if (res) return { ...result, ...res };
+            return { ...result, error: "Invalid Array Format" };
+        }
+
+        // 2. Auto Mode
+        const arrayRes = parseArray(trimmed);
+        const hexRes = parseHex(trimmed);
+        const b64Res = parseBase64(trimmed);
+
+        const candidates = [];
+        if (arrayRes) candidates.push(arrayRes);
+        if (hexRes) candidates.push(hexRes);
+        if (b64Res) candidates.push(b64Res);
+
+        if (candidates.length === 0) {
+            result.error = "Unknown Format";
             return result;
         }
+
+        // Detect Ambiguity
+        // Array usually distinct because of separators.
+        // Hex vs Base64 is the main ambiguity.
+
+        result.detectedModes = [];
+        if (arrayRes) result.detectedModes.push('Array');
+        if (hexRes) result.detectedModes.push('Hex');
+        if (b64Res) result.detectedModes.push('Base64');
+
+        // Selection Logic
+        // Priority: Array > Hex > Base64 (Default)
+
+        let best = null;
+        if (arrayRes) {
+            best = arrayRes;
+        } else if (hexRes) {
+            best = hexRes;
+            // If we have Hex, it wins over Base64 by default, BUT `detectedModes` will hint UI.
+        } else if (b64Res) {
+            best = b64Res;
+        }
+
+        return { ...result, ...best };
     },
 
     generateAllLists(bytes) {
@@ -212,10 +255,12 @@ const InspectorCore = {
 function frameInspector() {
     return {
         rawInput: '48656c6c6f00000040490fdb',
+        inputMode: 'Auto',
         byteLength: 0,
         offset: 0,
         inputType: null,
         inputError: null,
+        detectedModes: [],
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -233,6 +278,7 @@ function frameInspector() {
         init() {
             this.parse();
             this.$watch('rawInput', () => this.parse());
+            this.$watch('inputMode', () => this.parse());
         },
 
         get maxOffset() {
@@ -240,13 +286,12 @@ function frameInspector() {
         },
 
         parse() {
-            const { bytes, type, error } = InspectorCore.parseInput(this.rawInput);
+            const { bytes, type, error, detectedModes } = InspectorCore.parseInput(this.rawInput, this.inputMode);
             this.inputType = type;
             this.inputError = error;
+            this.detectedModes = detectedModes || [];
 
             if (error || !bytes || bytes.length === 0) {
-                // Could clear streams here but keeping previous valid state might be preferred or just empty.
-                // If error, let's stop processing.
                 return;
             }
             this.byteLength = bytes.length;
@@ -254,7 +299,7 @@ function frameInspector() {
         },
 
         scan() {
-            const { bytes, error } = InspectorCore.parseInput(this.rawInput);
+            const { bytes, error } = InspectorCore.parseInput(this.rawInput, 'Auto'); // Always scan in Auto? Or current mode? Auto seems safer for scan.
             if (error || !bytes || bytes.length < 4) return;
 
             let bestOffset = -1;

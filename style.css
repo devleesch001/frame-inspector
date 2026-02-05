@@ -435,3 +435,14 @@ input:checked+.slider:before {
     background: var(--md-sys-color-outline);
     border-radius: 3px;
 }
+
+.ambiguity-badge {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-left: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}

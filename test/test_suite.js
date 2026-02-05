@@ -17,10 +17,12 @@ function testParser() {
     const cases = [
         { in: "102030", expect0: 0x10, type: "Hex (Continuous)" },
         { in: "0x10 0x20", expect0: 0x10, type: "Array (Hex)" },
-        { in: "[16, 32]", expect0: 0x10, type: "Array (Integer)" }, // decimal 16 = 0x10
+        { in: "[16, 32]", expect0: 0x10, type: "Array (Integer)" },
         { in: "ECAw", expect0: 0x10, type: "Base64" },
-        { in: "0xZZ", isError: true }, // Invalid Hex
-        { in: "!!!!", isError: true } // Invalid Base64/Hex
+        // 0xZZ: Invalid Hex -> Fallback Base64 (0xZZ -> d3 16 59)
+        // 0 (index 52), x (index 49), Z (index 25), Z (index 25)
+        { in: "0xZZ", type: "Base64" },
+        { in: "!!!!", isError: true }
     ];
 
     cases.forEach(c => {
@@ -28,10 +30,16 @@ function testParser() {
         if (c.isError) {
             assert(error !== null, `Input "${c.in}" correctly reported error: ${error}`);
         } else {
-            assert(bytes && bytes.length > 0 && bytes[0] === c.expect0, `Input "${c.in}" parsed correctly`);
+            assert(bytes && bytes.length > 0 && (c.expect0 ? bytes[0] === c.expect0 : true), `Input "${c.in}" parsed correctly`);
             if (c.type) assert(type === c.type, `Input "${c.in}" type detected: ${type}`);
         }
     });
+
+    console.log("\n--- Testing Ambiguity ---");
+    // 0xAA: Valid Hex (170) AND Valid Base64 (d3 10 00)
+    const res = InspectorCore.parseInput("0xAA", "Auto");
+    assert(res.type === "Hex (Explicit)", "0xAA defaults to Hex");
+    assert(res.detectedModes.includes("Hex") && res.detectedModes.includes("Base64"), "0xAA detected as both Hex and Base64");
 }
 
 function testFloat64() {

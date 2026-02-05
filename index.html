@@ -36,29 +36,67 @@
 
             <!-- Feedback Section (Styled as Control Group) -->
             <div class="controls" style="padding: 0;">
-                <div class="control-group" style="width: 100%; justify-content: flex-start;">
-                    <!-- Default State -->
-                    <template x-if="!inputError && !inputType">
-                        <div style="color: var(--md-sys-color-secondary); font-size: 14px;">
-                            No data
-                        </div>
-                    </template>
+                <div class="control-group"
+                    style="width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
 
-                    <!-- Error State -->
-                    <template x-if="inputError">
-                        <div
-                            style="color: var(--md-sys-color-error); font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                            <span>⚠</span> <span x-text="inputError"></span>
-                        </div>
-                    </template>
+                    <!-- Feedback Messages -->
+                    <div style="display:flex; align-items:center;">
+                        <!-- Default State -->
+                        <template x-if="!inputError && !inputType">
+                            <div style="color: var(--md-sys-color-secondary); font-size: 14px;">
+                                No data
+                            </div>
+                        </template>
 
-                    <!-- Valid State -->
-                    <template x-if="!inputError && inputType">
-                        <div
-                            style="color: var(--md-sys-color-primary); display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                            <span>✓</span> <span x-text="'Detected: ' + inputType"></span>
-                        </div>
-                    </template>
+                        <!-- Error State -->
+                        <template x-if="inputError">
+                            <div
+                                style="color: var(--md-sys-color-error); font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                <span>⚠</span> <span x-text="inputError"></span>
+                            </div>
+                        </template>
+
+                        <!-- Valid State -->
+                        <template x-if="!inputError && inputType">
+                            <div
+                                style="color: var(--md-sys-color-primary); display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                <span>✓</span>
+                                <span x-text="'Detected: ' + inputType"></span>
+
+                                <!-- Ambiguity Hint -->
+                                <template x-if="inputMode === 'Auto' && detectedModes.length > 1">
+                                    <span class="ambiguity-badge">
+                                        Ambiguous!
+                                    </span>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Mode Selection (Radios) -->
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <label
+                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
+                            <input type="radio" x-model="inputMode" value="Auto"
+                                style="accent-color: var(--md-sys-color-primary);"> Auto
+                        </label>
+                        <label
+                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
+                            <input type="radio" x-model="inputMode" value="Hex"
+                                style="accent-color: var(--md-sys-color-primary);"> Hex
+                        </label>
+                        <label
+                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
+                            <input type="radio" x-model="inputMode" value="Base64"
+                                style="accent-color: var(--md-sys-color-primary);"> Base64
+                        </label>
+                        <label
+                            style="margin:0; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-on-surface);">
+                            <input type="radio" x-model="inputMode" value="Array"
+                                style="accent-color: var(--md-sys-color-primary);"> Array
+                        </label>
+                    </div>
+
                 </div>
             </div>
 
