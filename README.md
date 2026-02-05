@@ -66,6 +66,13 @@ Liste d'octets décimaux (0-255). Supporte les parenthèses `()`, crochets `[]` 
 
 ---
 
+## Pochaines Fonctionnalités (To-Do List)
+
+-   [ ] **Recherche Globale** : Pouvoir rechercher un nombre spécifique dans toute la structure interprétée, indépendamment de son type ou de sa représentation (Hex, Dec, etc.).
+-   [ ] **Inspection au Survol** : Afficher les détails de la trame brute correspondante au survol de la souris sur une valeur décodée.
+
+---
+
 ## Signaler un Bug
 
 Si vous rencontrez un comportement inattendu, une erreur de décodage ou si vous avez une suggestion d'amélioration :
