@@ -286,6 +286,7 @@ function frameInspector() {
         base64Preview: '',
         arrayPreview: '',
         textPreview: '',
+        utf8Preview: '',
 
         decodedStreams: {
             float32: { be: [], le: [], mb: [], ml: [] },
@@ -317,6 +318,7 @@ function frameInspector() {
                 this.base64Preview = '';
                 this.arrayPreview = '';
                 this.textPreview = '';
+                this.utf8Preview = '';
                 return;
             }
             // Generate Hex Preview (0xAA 0xBB format)
@@ -336,6 +338,13 @@ function frameInspector() {
 
             // Generate Text Preview (ASCII safe)
             this.textPreview = Array.from(bytes).map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.').join('');
+
+            // Generate UTF8 Preview
+            try {
+                this.utf8Preview = new TextDecoder('utf-8').decode(bytes);
+            } catch (e) {
+                this.utf8Preview = 'Invalid UTF-8';
+            }
 
             this.decodedStreams = InspectorCore.generateAllLists(bytes);
         }
