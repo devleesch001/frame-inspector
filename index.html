@@ -29,9 +29,6 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <!-- Placeholder SVG Favicon (Package Icon) to avoid 404 if file missing -->
-    <!-- You can replace this with: <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
-    <!-- Roboto Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -64,7 +61,7 @@
         <div class="input-section">
             <div class="text-field">
                 <label>Input Data</label>
-                <textarea x-model="rawInput" placeholder="Paste data here (Hex, Array, Base64)..."></textarea>
+                <textarea x-model="rawInput" placeholder="Paste data here (Hex, Array, Base64, Text)..."></textarea>
             </div>
 
             <!-- Feedback Section (Styled as Control Group) -->
@@ -112,6 +109,8 @@
                             @click="inputMode = 'Base64'">Base64</button>
                         <button class="segment-btn" :class="{ 'active': inputMode === 'Array' }"
                             @click="inputMode = 'Array'">Array</button>
+                        <button class="segment-btn" :class="{ 'active': inputMode === 'Text' }"
+                            @click="inputMode = 'Text'">Text</button>
                     </div>
 
                 </div>

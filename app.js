@@ -4,7 +4,7 @@ const InspectorCore = {
         const result = { bytes: new Uint8Array([]), type: null, error: null, detectedModes: [] };
         if (!input) return result;
         const trimmed = input.trim();
-        if (!trimmed) return result;
+        if (!trimmed && mode !== 'Text') return result;
 
         // --- Parsers ---
 
@@ -80,9 +80,19 @@ const InspectorCore = {
             }
         };
 
+        const parseText = (str) => {
+            const encoder = new TextEncoder();
+            return { bytes: encoder.encode(str), type: "Text" };
+        };
+
         // --- Execution ---
 
         // 1. Forced Mode
+        if (mode === 'Text') {
+            const res = parseText(input); // Use original input to preserve spaces
+            if (res) return { ...result, ...res };
+            return { ...result, error: "Invalid Text" };
+        }
         if (mode === 'Hex') {
             const res = parseHex(trimmed);
             if (res) return { ...result, ...res };
@@ -110,6 +120,11 @@ const InspectorCore = {
         if (b64Res) candidates.push(b64Res);
 
         if (candidates.length === 0) {
+            const textRes = parseText(input);
+            if (textRes && textRes.bytes.length > 0) {
+                result.detectedModes = ['Text'];
+                return { ...result, ...textRes };
+            }
             result.error = "Unknown Format";
             return result;
         }
