@@ -319,6 +319,18 @@ function frameInspector() {
                 this.arrayPreview = '';
                 this.textPreview = '';
                 this.utf8Preview = '';
+                this.decodedStreams = {
+                    float32: { be: [], le: [], mb: [], ml: [] },
+                    float64: { be: [], le: [], mb: [], ml: [] },
+                    uint64: { be: [], le: [], mb: [], ml: [] },
+                    int64: { be: [], le: [], mb: [], ml: [] },
+                    uint32: { be: [], le: [], mb: [], ml: [] },
+                    int32: { be: [], le: [], mb: [], ml: [] },
+                    uint16: { be: [], le: [] },
+                    int16: { be: [], le: [] },
+                    uint8: [],
+                    int8: []
+                };
                 return;
             }
             // Generate Hex Preview (0xAA 0xBB format)
