@@ -16,6 +16,7 @@ L'objectif est de fournir une visualisation claire des données pour des tâches
     *   **Hexadécimal** (formats bruts ou préfixés par `0x`).
     *   **Base64**.
     *   **Tableaux** (liste d'entiers décimaux).
+    *   **Texte** (chaînes de caractères brutes).
 *   **Décodage** : Interprétation des données en :
     *   `Int8`, `Uint8`
     *   `Int16`, `Uint16`
@@ -23,7 +24,7 @@ L'objectif est de fournir une visualisation claire des données pour des tâches
     *   `Int64`, `Uint64`
     *   `Float32`, `Float64`
 *   **Endianness** : Support des architectures Big Endian, Little Endian, et formats mixtes.
-*   **Conversions** : Visualisation ASCII, Hexadécimale, Base64 et Array.
+*   **Conversions** : Visualisation ASCII, UTF-8, Hexadécimale, Base64 et Array.
 
 ---
 
@@ -54,6 +55,12 @@ SGVsbG8gV29ybGQ=
 [72, 101, 108, 108, 111]
 (10, 20, 30)
 10, 255, 0
+```
+
+### Texte
+```text
+Hello World!
+Bonjour à tous !
 ```
 
 ---
